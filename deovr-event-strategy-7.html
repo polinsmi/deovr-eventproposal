@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeoVR Event Strategy — Polina Smirnova</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F5F4FF;
+    --ink: #1A1830;
+    --ink-mid: #3D3A5C;
+    --ink-light: #8E8BAA;
+    --accent: #7B5EC6;
+    --accent-light: #EDE8FF;
+    --teal: #5B8DD9;
+    --teal-light: #E5EEFF;
+    --gold: #C4607A;
+    --gold-light: #FFE8EE;
+    --border: rgba(26,24,48,0.1);
+    --gradient: linear-gradient(90deg, #6a9add, #9c7bc1, #f78b94);
+    --serif: 'Inter', system-ui, sans-serif;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Layout ── */
+  .page { max-width: 860px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+  /* ── Cover ── */
+  .cover {
+    padding: 2rem 0 2rem;
+    border-bottom: 3px solid transparent;
+    border-image: var(--gradient) 1;
+    margin-bottom: 2rem;
+  }
+  .cover-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+  }
+  .cover h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 600;
+    line-height: 1.1;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.5rem;
+    max-width: 640px;
+  }
+  .cover h1 em {
+    font-style: normal;
+    font-weight: 300;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  .cover-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .cover-meta-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    font-weight: 500;
+  }
+  .cover-meta-value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .cover-intro {
+    margin-top: 2.5rem;
+    max-width: 580px;
+    color: var(--ink-mid);
+    font-size: 1.05rem;
+    line-height: 1.75;
+    border-left: 3px solid var(--accent);
+    padding-left: 1.5rem;
+  }
+
+  /* ── TOC ── */
+  .toc {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.75rem;
+    margin-bottom: 2rem;
+  }
+  .toc-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+  .toc ol {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 3rem;
+  }
+  .toc li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .toc-num {
+    font-size: 0.72rem;
+    color: var(--ink-light);
+    font-weight: 500;
+    min-width: 18px;
+    font-variant-numeric: tabular-nums;
+  }
+  .toc a {
+    font-size: 0.88rem;
+    color: var(--ink-mid);
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.15s;
+  }
+  .toc a:hover { color: var(--accent); }
+
+  /* ── Section ── */
+  .section { margin-bottom: 2rem; }
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+  .section h2 {
+    font-family: var(--serif);
+    font-size: 1.9rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+  }
+  .section-sub {
+    color: var(--ink-mid);
+    font-size: 0.92rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section h3 {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-top: 1.5rem;
+    margin-bottom: 0.6rem;
+    color: var(--accent);
+  }
+  p { margin-bottom: 1rem; color: var(--ink-mid); font-size: 0.95rem; }
+  p strong { color: var(--ink); font-weight: 500; }
+
+  /* ── Callout ── */
+  .callout {
+    border-radius: 10px;
+    padding: 0.9rem 1.25rem;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+  }
+  .callout.accent { background: var(--accent-light); border-left: 3px solid var(--accent); }
+  .callout.teal   { background: var(--teal-light);   border-left: 3px solid var(--teal); }
+  .callout.gold   { background: var(--gold-light);   border-left: 3px solid var(--gold); }
+  .callout strong { display: block; font-weight: 500; color: var(--ink); margin-bottom: 0.3rem; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* ── Questions grid ── */
+  .q-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .q-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+  }
+  .q-card .q-cat {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .q-card ul { list-style: none; }
+  .q-card li {
+    font-size: 0.85rem;
+    color: var(--ink-mid);
+    padding: 0.25rem 0;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.4;
+  }
+  .q-card li:last-child { border: none; }
+  .q-card li::before { content: "→ "; color: var(--accent); font-weight: 500; }
+
+  /* ── Timeline ── */
+  .timeline { margin: 1.5rem 0; }
+  .tl-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .tl-row:last-child { border: none; }
+  .tl-when {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent);
+    padding-top: 0.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .tl-what { font-size: 0.88rem; color: var(--ink-mid); }
+  .tl-what strong { color: var(--ink); font-weight: 500; }
+
+  /* ── Stakeholder table ── */
+  .stakeholder-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.85rem;
+  }
+  .stakeholder-table th {
+    text-align: left;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    font-weight: 500;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .stakeholder-table td {
+    padding: 0.7rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-mid);
+    vertical-align: top;
+  }
+  .stakeholder-table td:first-child { color: var(--ink); font-weight: 500; }
+  .stakeholder-table tr:last-child td { border: none; }
+
+  /* ── Agenda day ── */
+  .agenda-day {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .agenda-day-header {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #1A1830, #2d1f4a);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .agenda-day-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; }
+  .agenda-day-theme { font-size: 0.78rem; opacity: 0.6; letter-spacing: 0.06em; }
+  .agenda-slot {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 1rem;
+    padding: 0.85rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .agenda-slot:last-child { border: none; }
+  .agenda-time {
+    font-size: 0.75rem;
+    color: var(--ink-light);
+    font-weight: 500;
+    padding-top: 0.1rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .agenda-item { font-size: 0.88rem; color: var(--ink); }
+  .agenda-item small { display: block; color: var(--ink-light); font-size: 0.78rem; margin-top: 0.15rem; }
+  .slot-type {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-weight: 500;
+    margin-left: 0.5rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+  .tag-vr   { background: var(--accent-light); color: var(--accent); }
+  .tag-work { background: var(--teal-light);   color: var(--teal); }
+  .tag-food { background: var(--gold-light);   color: var(--gold); }
+  .tag-social { background: #EDE8FF; color: #7B5EC6; }
+
+  /* ── Hotel compare ── */
+  .hotel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin: 1.5rem 0;
+  }
+  .hotel-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .hotel-card.recommended { border: 2px solid var(--accent); }
+  .hotel-card-header {
+    padding: 1rem 1.25rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .hotel-rec-badge {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    display: inline-block;
+  }
+  .hotel-name { font-family: var(--serif); font-size: 1.1rem; margin-bottom: 0.2rem; }
+  .hotel-tag { font-size: 0.78rem; color: var(--ink-light); }
+  .hotel-pros { padding: 0.75rem 1.25rem; }
+  .hotel-pros li {
+    font-size: 0.83rem;
+    color: var(--ink-mid);
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--border);
+    list-style: none;
+  }
+  .hotel-pros li:last-child { border: none; }
+  .hotel-pros li::before { content: "✓ "; color: var(--teal); font-weight: 600; }
+
+  /* ── US section ── */
+  .phase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .phase-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+  }
+  .phase-num {
+    font-size: 1.8rem;
+    font-family: var(--serif);
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .phase-title {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .phase-desc { font-size: 0.82rem; color: var(--ink-mid); line-height: 1.5; }
+
+  /* ── Wow moment ── */
+  .wow-box {
+    background: linear-gradient(135deg, #1A1830 60%, #2d1f4a);
+    border: 1px solid rgba(155,123,193,0.3);
+    color: white;
+    border-radius: 14px;
+    padding: 2.5rem;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .wow-box::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(155,123,193,0.2);
+    pointer-events: none;
+  }
+  .wow-box h3 {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    color: white;
+    margin-bottom: 0.75rem;
+  }
+  .wow-box p { color: rgba(255,255,255,0.72); font-size: 0.9rem; margin-bottom: 0.6rem; }
+  .wow-box p strong { color: white; }
+  .wow-tag {
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.85);
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin: 0.25rem 0.2rem 0 0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ── Vendor negotiation ── */
+  .nego-list {
+    margin: 0.75rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .nego-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 1rem;
+    padding: 0.65rem 1.25rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    align-items: center;
+  }
+  .nego-label { font-weight: 500; color: var(--ink); }
+  .nego-val   { color: var(--ink-mid); }
+
+  /* ── Closing ── */
+  .closing {
+    border-top: 1px solid var(--border);
+    padding-top: 3rem;
+    margin-top: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .closing-name { font-family: var(--serif); font-size: 1.6rem; }
+  .closing-role { font-size: 0.82rem; color: var(--ink-light); margin-top: 0.2rem; }
+  .closing-note { font-size: 0.82rem; color: var(--ink-light); max-width: 320px; text-align: right; line-height: 1.6; }
+
+  /* ── Part dividers ── */
+  .part-divider {
+    margin: 3rem 0 2.5rem;
+    position: relative;
+  }
+  .part-divider-inner {
+    background: linear-gradient(135deg, #1A1830 60%, #2d1f4a);
+    border-radius: 14px;
+    padding: 2.5rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    border: 1px solid rgba(155,123,193,0.3);
+  }
+  .part-divider-left {}
+  .part-divider-part {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    display: inline-block;
+  }
+  .part-divider-title {
+    font-family: var(--serif);
+    font-size: 1.9rem;
+    font-weight: 600;
+    color: white;
+    line-height: 1.15;
+  }
+  .part-divider-title em { font-style: normal; font-weight: 600; color: white; }
+  .part-divider-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: right;
+  }
+  .part-divider-detail {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.5);
+  }
+  .part-divider-detail strong {
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+  }
+
+  /* ── Approach banner ── */
+  .approach-banner {
+    background: var(--teal-light);
+    border: 1px solid var(--teal);
+    border-radius: 12px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 4rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+  .approach-banner-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal);
+    font-weight: 500;
+    white-space: nowrap;
+    padding-top: 0.15rem;
+    min-width: 80px;
+  }
+  .approach-banner p {
+    font-size: 0.9rem;
+    color: var(--ink-mid);
+    margin: 0;
+    line-height: 1.65;
+  }
+  .approach-banner p strong { color: var(--teal); }
+
+  @media (max-width: 640px) {
+    .toc ol, .q-grid, .hotel-grid, .phase-grid { grid-template-columns: 1fr; }
+    .agenda-slot, .tl-row, .nego-item { grid-template-columns: 1fr; gap: 0.25rem; }
+    .closing { flex-direction: column; align-items: flex-start; }
+    .closing-note { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-tag">Test Case · Polina Smirnova</div>
+    <h1>Event Proposal <em>·</em> DeoVR</h1>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li style="grid-column: 1 / -1; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0.25rem;">
+        <span style="font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); font-weight: 500;">Part I — Belgrade Internal Meetup</span>
+      </li>
+      <li><span class="toc-num">01</span><a href="#upfront">Questions I ask upfront</a></li>
+      <li><span class="toc-num">02</span><a href="#agenda">Agenda — 5 days</a></li>
+      <li><span class="toc-num">03</span><a href="#stakeholders">People & coordination</a></li>
+      <li><span class="toc-num">04</span><a href="#hotel">Venue & vendors</a></li>
+      <li style="grid-column: 1 / -1; padding-bottom: 0.5rem; padding-top: 0.75rem; border-bottom: 1px solid var(--border); margin-bottom: 0.25rem;">
+        <span style="font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); font-weight: 500;">Part II — DeoVR Meetup · US</span>
+      </li>
+      <li><span class="toc-num">05</span><a href="#us-upfront">Questions I ask upfront</a></li>
+      <li><span class="toc-num">06</span><a href="#us">Programme</a></li>
+      <li><span class="toc-num">07</span><a href="#belgrade">People & coordination</a></li>
+      <li><span class="toc-num">08</span><a href="#partners">Partners & external vendors</a></li>
+      <li><span class="toc-num">09</span><a href="#wow">My overall approach</a></li>
+    </ol>
+  </div>
+
+
+  <!-- INTRO -->
+  <div style="margin-bottom: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem;">
+      <div style="font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 0.5rem;">Part I — Belgrade</div>
+      <p style="margin: 0; font-size: 0.9rem; color: var(--ink-mid); line-height: 1.6;">A 5-day internal offsite built around focused work sessions and local Belgrade experiences.</p>
+    </div>
+    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem;">
+      <div style="font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 0.5rem;">Part II — US Meetup</div>
+      <p style="margin: 0; font-size: 0.9rem; color: var(--ink-mid); line-height: 1.6;">A Creator & Partners Open House — an intimate industry gathering where DeoVR and ecosystem players openly discuss how to work together.</p>
+    </div>
+  </div>
+
+  <!-- PART I DIVIDER -->
+  <div class="part-divider">
+    <div class="part-divider-inner">
+      <div class="part-divider-left">
+        <div class="part-divider-part">Part I</div>
+        <div class="part-divider-title">Belgrade <em>Internal</em><br>Meetup</div>
+      </div>
+      <div class="part-divider-meta">
+        <div class="part-divider-detail"><strong>Format</strong> Team offsite</div>
+        <div class="part-divider-detail"><strong>Scale</strong> 20 people · 5 days</div>
+        <div class="part-divider-detail"><strong>Location</strong> Belgrade, Serbia</div>
+        <div class="part-divider-detail"><strong>Audience</strong> Internal team only</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: BELGRADE QUESTIONS -->
+  <div class="section" id="upfront">
+    <div class="section-label">Part I · Section 01</div>
+    <h2>Questions I ask upfront</h2>
+
+    <div class="q-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+      <div class="q-card">
+        <div class="q-cat">1. Purpose & outcomes</div>
+        <ul>
+          <li>Primary goal — alignment, decisions, or team connection?</li>
+          <li>What does success look like? Key KPIs?</li>
+          <li>Is there a milestone or deliverable anchoring this week?</li>
+        </ul>
+      </div>
+      <div class="q-card">
+        <div class="q-cat">2. People & dynamics</div>
+        <ul>
+          <li>Who is attending?</li>
+          <li>Full focus or partial (some daily work still running)?</li>
+          <li>How often does the team meet in person?</li>
+          <li>Dynamics or tensions to keep in mind?</li>
+        </ul>
+      </div>
+      <div class="q-card">
+        <div class="q-cat">3. Budget & ownership</div>
+        <ul>
+          <li>Fixed budget range?</li>
+          <li>Previous events — what worked / didn't?</li>
+          <li>Who owns agenda content?</li>
+          <li>Who has final sign-off?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SECTION 2: AGENDA -->
+  <div class="section" id="agenda">
+    <div class="section-label">Part I · Section 02</div>
+    <h2>Agenda — 5 days</h2>
+    <p class="section-sub">Day 1 arrival · Day 2 product & work · Day 3 immersive · Day 4 local experience · Day 5 close</p>
+
+    <h3>Space setup</h3>
+    <div class="nego-list" style="margin-bottom: 2rem;">
+      <div class="nego-item"><div class="nego-label">Main room</div><div class="nego-val">Full-group sessions. Round tables of 4–5.</div></div>
+      <div class="nego-item"><div class="nego-label">Breakout room</div><div class="nego-val">Parallel tracks and 1:1s. Available all day.</div></div>
+      <div class="nego-item"><div class="nego-label">Lounge</div><div class="nego-val">Breaks, demos, informal conversations. Option to set up a VR station for breaks in work sessions.</div></div>
+      <div class="nego-item"><div class="nego-label">Dining</div><div class="nego-val">Always separate from work spaces.</div></div>
+    </div>
+
+    <h3>Track 1 — Deep work & sessions</h3>
+
+    <div class="agenda-day">
+      <div class="agenda-day-header">
+        <div class="agenda-day-title">Day 1 — Arrival</div>
+        <div class="agenda-day-theme">Settle in</div>
+      </div>
+      <div class="agenda-slot"><div class="agenda-time">Afternoon</div><div class="agenda-item">Check-in</div></div>
+      <div class="agenda-slot"><div class="agenda-time">Evening</div><div class="agenda-item">Welcome dinner <span class="slot-type tag-food">F&B</span><small>Local Serbian restaurant — first taste of Belgrade</small></div></div>
+    </div>
+
+    <div class="agenda-day">
+      <div class="agenda-day-header">
+        <div class="agenda-day-title">Day 2 — Product & Work</div>
+        <div class="agenda-day-theme">Full work day</div>
+      </div>
+      <div class="agenda-slot"><div class="agenda-time">Morning</div><div class="agenda-item">Product talks & roadmap <span class="slot-type tag-work">work</span></div></div>
+      <div class="agenda-slot"><div class="agenda-time">Afternoon</div><div class="agenda-item">Cross-team syncs <span class="slot-type tag-work">work</span> · Networking zones (unmoderated) for those between sessions</div></div>
+      <div class="agenda-slot"><div class="agenda-time">Evening</div><div class="agenda-item">Yacht cruise along the rivers of Belgrade <span class="slot-type tag-social">social</span> <span class="slot-type tag-food">F&B</span><small>DJ set, hot catering, unlimited drinks, structured networking on the water</small></div></div>
+    </div>
+
+    <h3>Track 2 — Team building & social</h3>
+
+    <div class="agenda-day">
+      <div class="agenda-day-header">
+        <div class="agenda-day-title">Day 3 — Immersive</div>
+        <div class="agenda-day-theme">Work + wow moment</div>
+      </div>
+      <div class="agenda-slot"><div class="agenda-time">Morning</div><div class="agenda-item">Breakout tracks <span class="slot-type tag-work">work</span><small>Implementation-focused</small></div></div>
+      <div class="agenda-slot"><div class="agenda-time">Afternoon</div><div class="agenda-item">DeoVR immersive workshop <span class="slot-type tag-social">social</span><small>Two teams: one plays VR content creators, one plays the DeoVR platform team evaluating submissions. Both work through the actual product — seeing how it operates from both sides.</small></div></div>
+      <div class="agenda-slot"><div class="agenda-time">Evening</div><div class="agenda-item">Synchronised group VR experience <span class="slot-type tag-vr">VR</span> · Dinner <span class="slot-type tag-food">F&B</span><small>Full group in one shared environment simultaneously — 5 min, then back in the room together</small></div></div>
+      <div class="agenda-slot"><div class="agenda-time">Late evening</div><div class="agenda-item">Darts or billiards <span class="slot-type tag-social">social</span><small>Optional — casual wind-down after dinner</small></div></div>
+    </div>
+
+    <div class="agenda-day">
+      <div class="agenda-day-header">
+        <div class="agenda-day-title">Day 4 — Belgrade</div>
+        <div class="agenda-day-theme">Local experience day</div>
+      </div>
+      <div class="agenda-slot"><div class="agenda-time">Day</div><div class="agenda-item">Belgrade day out <span class="slot-type tag-social">social</span><small>Golubac fortress visit (2h from Belgrade) → boat ride → winery tour</small></div></div>
+      <div class="agenda-slot"><div class="agenda-time">Evening</div><div class="agenda-item">Local cuisine dinner with live music <span class="slot-type tag-food">F&B</span></div></div>
+    </div>
+
+    <div class="agenda-day">
+      <div class="agenda-day-header">
+        <div class="agenda-day-title">Day 5 — Close</div>
+        <div class="agenda-day-theme">Light ending, clear takeaways</div>
+      </div>
+      <div class="agenda-slot"><div class="agenda-time">Morning</div><div class="agenda-item">Free time · Optional 1:1s</div></div>
+      <div class="agenda-slot"><div class="agenda-time">Midday</div><div class="agenda-item">Farewell lunch <span class="slot-type tag-food">F&B</span> · Departures from 14:00</div></div>
+    </div>
+
+    <div class="callout teal">
+      <strong>Note</strong>
+      Work programme is shaped by team priorities and leadership input. Social and off-site programming depends on team demographics and previous event experience — confirmed during the brief.
+    </div>
+
+  </div>
+
+
+  <!-- SECTION 3: PEOPLE & COORDINATION -->
+  <div class="section" id="stakeholders">
+    <div class="section-label">Part I · Section 03</div>
+    <h2>People & coordination</h2>
+
+    <table class="stakeholder-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Who</th>
+          <th>Responsible for</th>
+          <th>When involved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Main stakeholder / Decision maker</td>
+          <td>CEO / dept head</td>
+          <td>Goals, budget sign-off, opening</td>
+          <td>Kickoff + final review</td>
+        </tr>
+        <tr>
+          <td>Event manager</td>
+          <td>Me</td>
+          <td>Venue, vendors, agenda, run-of-show, experience</td>
+          <td>Throughout the whole process</td>
+        </tr>
+        <tr>
+          <td>Agenda lead</td>
+          <td>Team / product lead</td>
+          <td>Workshop content, session topics, outputs</td>
+          <td>Throughout agenda building</td>
+        </tr>
+        <tr>
+          <td>Operations / HR</td>
+          <td>Internal team</td>
+          <td>Travel, reimbursements, contracts</td>
+          <td>Once venue confirmed and ongoing</td>
+        </tr>
+        <tr>
+          <td>Venue contact</td>
+          <td>Hotel / space manager</td>
+          <td>Rooms, F&B, AV, setup</td>
+          <td>From the start</td>
+        </tr>
+        <tr>
+          <td>External vendors</td>
+          <td>Activities, entertainment</td>
+          <td>Activity execution</td>
+          <td>After agenda approved</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Planning timeline</h3>
+    <div style="overflow-x: auto; margin: 1.5rem 0;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; min-width: 580px;">
+        <thead>
+          <tr>
+            <th style="text-align: left; padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--border); color: var(--ink-light); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; width: 180px;">Track</th>
+            <th style="text-align: center; padding: 0.5rem 0.4rem; border-bottom: 2px solid var(--border); color: var(--ink-light); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;">T−6w</th>
+            <th style="text-align: center; padding: 0.5rem 0.4rem; border-bottom: 2px solid var(--border); color: var(--ink-light); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;">T−5w</th>
+            <th style="text-align: center; padding: 0.5rem 0.4rem; border-bottom: 2px solid var(--border); color: var(--ink-light); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;">T−4w</th>
+            <th style="text-align: center; padding: 0.5rem 0.4rem; border-bottom: 2px solid var(--border); color: var(--ink-light); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;">T−3w</th>
+            <th style="text-align: center; padding: 0.5rem 0.4rem; border-bottom: 2px solid var(--border); color: var(--ink-light); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;">T−2w</th>
+            <th style="text-align: center; padding: 0.5rem 0.4rem; border-bottom: 2px solid var(--border); color: var(--ink-light); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;">T−1w</th>
+            <th style="text-align: center; padding: 0.5rem 0.4rem; border-bottom: 2px solid var(--border); color: var(--ink-light); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;">T−1d</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--ink); font-weight: 500;">Discovery & brief</td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--accent); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td>
+          </tr>
+          <tr>
+            <td style="padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--ink); font-weight: 500;">Venue search & negotiation</td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--teal); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--teal); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--teal); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td>
+          </tr>
+          <tr>
+            <td style="padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--ink); font-weight: 500;">Agenda building</td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--accent); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--accent); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--accent); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--accent); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td>
+          </tr>
+          <tr>
+            <td style="padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--ink); font-weight: 500;">Outside activities & vendors</td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--gold); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--gold); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td>
+          </tr>
+          <tr>
+            <td style="padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--ink); font-weight: 500;">Travel & comms to attendees</td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--teal); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--teal); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--teal); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td>
+          </tr>
+          <tr>
+            <td style="padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--ink); font-weight: 500;">F&B & dietary needs</td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--gold); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--gold); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td>
+          </tr>
+          <tr>
+            <td style="padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--ink); font-weight: 500;">Run-of-show & final prep</td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td><td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border); text-align: center;"><div style="background: var(--accent); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+            <td style="padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--border);"></td>
+          </tr>
+          <tr>
+            <td style="padding: 0.55rem 0.75rem; color: var(--ink); font-weight: 500;">On-site setup</td>
+            <td style="padding: 0.55rem 0.4rem;"></td><td style="padding: 0.55rem 0.4rem;"></td><td style="padding: 0.55rem 0.4rem;"></td><td style="padding: 0.55rem 0.4rem;"></td><td style="padding: 0.55rem 0.4rem;"></td><td style="padding: 0.55rem 0.4rem;"></td>
+            <td style="padding: 0.55rem 0.4rem; text-align: center;"><div style="background: var(--teal); border-radius: 4px; height: 10px; width: 100%;"></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- SECTION 4: VENUE & VENDORS -->
+  <div class="section" id="hotel">
+    <div class="section-label">Part I · Section 04</div>
+    <h2>Venue & vendors</h2>
+
+    <h3>Step 1 — Request & compare</h3>
+    <p>I'd start with the proposed hotel options (Mama Shelter Belgrade and Hotel Bristol) and request pricing, floor plans, F&B packages, AV inclusions, and availability. As a backup, I'd also look at a separate coworking space (e.g. Impact Hub Belgrade) for work sessions combined with a hotel for accommodation.</p>
+
+    <h3>Selection criteria</h3>
+    <div class="nego-list">
+      <div class="nego-item"><div class="nego-label">Space flexibility</div><div class="nego-val">Can it support plenary + breakout + lounge simultaneously?</div></div>
+      <div class="nego-item"><div class="nego-label">AV quality</div><div class="nego-val">Screens, sound, WiFi bandwidth sufficient for 20 people working in parallel</div></div>
+      <div class="nego-item"><div class="nego-label">Overall design</div><div class="nego-val">Not a generic conference room — something that feels alive. Both creative and functional.</div></div>
+      <div class="nego-item"><div class="nego-label">F&B setup</div><div class="nego-val">Separate dining space; flexibility on menus and timing. Menu must include options for vegetarians, vegans, and common allergies.</div></div>
+      <div class="nego-item"><div class="nego-label">Location</div><div class="nego-val">Walkable to evening restaurant options</div></div>
+      <div class="nego-item"><div class="nego-label">Overall offer</div><div class="nego-val">Best combination of price, included services, and flexibility</div></div>
+    </div>
+
+    <h3>Step 2 — Negotiate</h3>
+    <ol style="margin: 1rem 0 0; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.65rem;">
+      <li style="font-size: 0.88rem; color: var(--ink-mid);"><strong style="color: var(--ink);">Room + event space bundle.</strong> Book 20 rooms / 5 nights since hotels are more likely to include event spaces at a discount when the room block is this size.</li>
+      <li style="font-size: 0.88rem; color: var(--ink-mid);"><strong style="color: var(--ink);">F&B.</strong> Review the menu and confirm options for vegetarians, vegans, and common allergies. Push for a discount on the overall package.</li>
+      <li style="font-size: 0.88rem; color: var(--ink-mid);"><strong style="color: var(--ink);">AV package.</strong> Clarify what's included and pricing: projectors, screens, mics, WiFi.</li>
+      <li style="font-size: 0.88rem; color: var(--ink-mid);"><strong style="color: var(--ink);">Cancellation policy.</strong> Push for a reasonable cancellation window — at minimum 2–3 weeks notice without penalty.</li>
+      <li style="font-size: 0.88rem; color: var(--ink-mid);"><strong style="color: var(--ink);">Option C (coworking for work sessions + hotel for accommodation).</strong> Keep as a backup — in case hotel pricing or availability doesn't work out.</li>
+    </ol>
+  </div>
+
+
+  <!-- PART II DIVIDER -->
+  <div class="part-divider">
+    <div class="part-divider-inner">
+      <div class="part-divider-left">
+        <div class="part-divider-part">Part II</div>
+        <div class="part-divider-title">DeoVR Meetup <em>·</em><br>United States</div>
+      </div>
+      <div class="part-divider-meta">
+        <div class="part-divider-detail"><strong>Format</strong> Creator & Partners Open House</div>
+        <div class="part-divider-detail"><strong>Scale</strong> Intimate — focused audience</div>
+        <div class="part-divider-detail"><strong>Location</strong> US tech hub city</div>
+        <div class="part-divider-detail"><strong>Venue</strong> Experiential / creative space</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: US QUESTIONS -->
+  <div class="section" id="us-upfront">
+    <div class="section-label">Part II · Section 05</div>
+    <h2>Questions I ask upfront</h2>
+
+    <div class="q-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+      <div class="q-card">
+        <div class="q-cat">1. Goals & audience</div>
+        <ul>
+          <li>Primary goal — awareness, new partnerships, community, press?</li>
+          <li>Target audience: creators, devs, investors, media, ecosystem partners?</li>
+          <li>Are we targeting new partners, existing ones, or both?</li>
+          <li>What are the key KPIs for this event?</li>
+        </ul>
+      </div>
+      <div class="q-card">
+        <div class="q-cat">2. Format & partners</div>
+        <ul>
+          <li>What overall format makes most sense for our goals?</li>
+          <li>Keynote or announcement anchoring the event?</li>
+          <li>Do we need external speakers?</li>
+          <li>Are there co-hosts — and if so, do we share the budget?</li>
+          <li>Existing relationships to activate?</li>
+        </ul>
+      </div>
+      <div class="q-card">
+        <div class="q-cat">3. Budget & marketing</div>
+        <ul>
+          <li>Fixed budget range?</li>
+          <li>Which channels should we use to reach our target audience?</li>
+          <li>Press or influencers?</li>
+          <li>Content captured after the event?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SECTION 7: US MEETUP -->
+  <div class="section" id="us">
+    <div class="section-label">Part II · Section 06</div>
+    <h2>DeoVR Creator & Partners Open House</h2>
+    <p class="section-sub">One possible concept — the final format depends on the answers to the questions above. This concept is built as live Q&A and open tables from multiple players, not a DeoVR monologue.</p>
+
+    <h3>Programme — 3 hours</h3>
+    <div class="nego-list">
+      <div class="nego-item"><div class="nego-label">Check-in & networking<br><small style="font-weight:400; color: var(--ink-light);">20 min</small></div><div class="nego-val">Guests arrive and check in. Bar and food station open. VR stations open for demos.</div></div>
+      <div class="nego-item"><div class="nego-label">Opening & announcements<br><small style="font-weight:400; color: var(--ink-light);">15–20 min</small></div><div class="nego-val">Short welcome from DeoVR — product updates, news, or announcements. Partners can also share brief updates relevant to the audience.</div></div>
+      <div class="nego-item"><div class="nego-label">Three Open Corners<br><small style="font-weight:400; color: var(--ink-light);">60 min</small></div><div class="nego-val">
+        Space splits into three simultaneous zones — guests move freely:<br><br>
+        <strong>Corner 1 — DeoVR Platform</strong> — publishing, monetisation, analytics, promo. Real interface, real examples.<br>
+        <strong>Corner 2 — Production & Hardware</strong> — studios and hardware partners on setups, challenges, test options.<br>
+        <strong>Corner 3 — Brands & Deals</strong> — brands and DeoVR on what formats they need and how creators can get involved.
+      </div></div>
+      <div class="nego-item"><div class="nego-label">Open bar & networking<br><small style="font-weight:400; color: var(--ink-light);">Until close</small></div><div class="nego-val">Closing remarks. Followed by open networking with food and bar.</div></div>
+    </div>
+
+    <h3>Location & venue</h3>
+    <div class="nego-list">
+      <div class="nego-item"><div class="nego-label">Location</div><div class="nego-val">Major tech hub city with a dense VR and spatial media community. Ideally timed around an existing industry event to reduce acquisition cost.</div></div>
+      <div class="nego-item"><div class="nego-label">Venue</div><div class="nego-val">Not a hotel ballroom — raw, architectural, or purpose-built for immersive experiences. Somewhere that allows VR stations, open flow between zones, and a bar without feeling like a conference.</div></div>
+    </div>
+
+    <h3>Marketing & distribution</h3>
+    <p style="font-size: 0.88rem; color: var(--ink-mid); line-height: 2;">
+      <span style="background: var(--accent-light); color: var(--accent); font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">T−6w</span> Partners confirmed &nbsp;·&nbsp;
+      <span style="background: var(--accent-light); color: var(--accent); font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">T−5w</span> Media & influencers &nbsp;·&nbsp;
+      <span style="background: var(--accent-light); color: var(--accent); font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">T−4w</span> Announce via social + partner channels &nbsp;·&nbsp;
+      <span style="background: var(--accent-light); color: var(--accent); font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">T−3w</span> Direct invites via Luma
+    </p>
+
+
+  </div>
+
+
+  <!-- SECTION 7: US PEOPLE & COORDINATION -->
+  <div class="section" id="belgrade">
+    <div class="section-label">Part II · Section 07</div>
+    <h2>People & coordination</h2>
+
+    <div class="nego-list">
+      <div class="nego-item"><div class="nego-label">DeoVR team</div><div class="nego-val">Main decision maker, event manager, content managers, designers, operations</div></div>
+      <div class="nego-item"><div class="nego-label">Partners</div><div class="nego-val">Co-present and co-promote</div></div>
+      <div class="nego-item"><div class="nego-label">Vendors</div><div class="nego-val">Production, catering, AV team, photo & video, VR equipment</div></div>
+      <div class="nego-item"><div class="nego-label">Venue</div><div class="nego-val">Space manager — setup, logistics, AV</div></div>
+      <div class="nego-item"><div class="nego-label">Media / influencers</div><div class="nego-val">Press and content creators covering the event</div></div>
+    </div>
+  </div>
+
+
+  <!-- SECTION 8: EXTERNAL PARTNERS -->
+  <div class="section" id="partners">
+    <div class="section-label">Part II · Section 08</div>
+    <h2>Working with external partners</h2>
+
+    <div class="timeline">
+      <div class="tl-row">
+        <div class="tl-when">1. Prep</div>
+        <div class="tl-what">Define what this partner brings and what we offer in return. Build a shortlist, keep only the ones that fit.</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-when">2. Outreach</div>
+        <div class="tl-what">Through our network where possible.</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-when">3. Align</div>
+        <div class="tl-what">Roles, contributions, budget split if co-hosting. Put it in writing — no verbal-only agreements.</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-when">4. Execute</div>
+        <div class="tl-what">Shared timeline, clear owners. Adjust as needed along the way.</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-when">5. Post-event</div>
+        <div class="tl-what">Share results, collect feedback.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SECTION 9: MY OVERALL APPROACH -->
+  <div class="section" id="wow">
+    <div class="section-label">To wrap up</div>
+    <h2>My overall approach</h2>
+
+    <div class="wow-box">
+      <div class="timeline" style="margin: 0;">
+        <div class="tl-row" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <div class="tl-when" style="color: rgba(255,255,255,0.5);">Objectives first</div>
+          <div class="tl-what" style="color: rgba(255,255,255,0.8);">Start from clear goals and constraints, then design the agenda and format backwards from outcomes.</div>
+        </div>
+        <div class="tl-row" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <div class="tl-when" style="color: rgba(255,255,255,0.5);">Same core process</div>
+          <div class="tl-what" style="color: rgba(255,255,255,0.8);">Discovery → venue & logistics → partners & vendors → agenda building → communications → run-of-show.</div>
+        </div>
+        <div class="tl-row" style="border: none;">
+          <div class="tl-when" style="color: rgba(255,255,255,0.5);">DeoVR-only moment</div>
+          <div class="tl-what" style="color: rgba(255,255,255,0.8);">Anchor both events around a distinctive DeoVR-only shared VR experience that makes people talk about it the next day.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+</body>
+</html>
