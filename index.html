@@ -62,7 +62,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0;
     max-width: 640px;
   }
   .cover h1 em {
@@ -146,7 +146,7 @@
   .toc a:hover { color: var(--accent); }
 
   /* ── Section ── */
-  .section { margin-bottom: 2rem; }
+  .section { margin-bottom: 1.75rem; }
   .section-label {
     font-size: 0.68rem;
     letter-spacing: 0.16em;
@@ -154,13 +154,14 @@
     color: var(--ink-light);
     font-weight: 500;
     margin-bottom: 0.3rem;
+    display: block;
   }
   .section h2 {
     font-family: var(--serif);
-    font-size: 1.9rem;
+    font-size: 1.75rem;
     font-weight: 600;
     line-height: 1.2;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
     background: var(--gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -169,29 +170,30 @@
   }
   .section-sub {
     color: var(--ink-mid);
-    font-size: 0.92rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
+    font-size: 0.88rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
     border-bottom: 1px solid var(--border);
   }
   .section h3 {
     font-family: var(--serif);
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 600;
     letter-spacing: 0.02em;
-    margin-top: 1.5rem;
-    margin-bottom: 0.6rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
     color: var(--accent);
   }
-  p { margin-bottom: 1rem; color: var(--ink-mid); font-size: 0.95rem; }
+  p { margin-bottom: 0.6rem; color: var(--ink-mid); font-size: 0.9rem; }
   p strong { color: var(--ink); font-weight: 500; }
 
   /* ── Callout ── */
   .callout {
-    border-radius: 10px;
-    padding: 0.9rem 1.25rem;
-    margin: 1rem 0;
-    font-size: 0.88rem;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin: 0.75rem 0;
+    font-size: 0.85rem;
   }
   .callout.accent { background: var(--accent-light); border-left: 3px solid var(--accent); }
   .callout.teal   { background: var(--teal-light);   border-left: 3px solid var(--teal); }
@@ -236,7 +238,7 @@
     display: grid;
     grid-template-columns: 110px 1fr;
     gap: 1rem;
-    padding: 0.6rem 0;
+    padding: 0.45rem 0;
     border-bottom: 1px solid var(--border);
     align-items: start;
   }
@@ -444,16 +446,16 @@
 
   /* ── Vendor negotiation ── */
   .nego-list {
-    margin: 0.75rem 0;
+    margin: 0.5rem 0;
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.3rem;
   }
   .nego-item {
     display: grid;
     grid-template-columns: 200px 1fr;
     gap: 1rem;
-    padding: 0.65rem 1.25rem;
+    padding: 0.5rem 1rem;
     background: white;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -480,7 +482,7 @@
 
   /* ── Part dividers ── */
   .part-divider {
-    margin: 3rem 0 2.5rem;
+    margin: 2rem 0 1.75rem;
     position: relative;
   }
   .part-divider-inner {
@@ -559,6 +561,12 @@
   }
   .approach-banner p strong { color: var(--teal); }
 
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body { background: white; }
+    .page { padding: 0 1.5rem 3rem; }
+  }
+
   @media (max-width: 640px) {
     .toc ol, .q-grid, .hotel-grid, .phase-grid { grid-template-columns: 1fr; }
     .agenda-slot, .tl-row, .nego-item { grid-template-columns: 1fr; gap: 0.25rem; }
@@ -601,18 +609,18 @@
 
   <!-- INTRO -->
   <div style="margin-bottom: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem;">
+    <div style="background: var(--accent-light); border: 1px solid rgba(123,94,198,0.2); border-radius: 12px; padding: 1.25rem 1.5rem;">
       <div style="font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 0.5rem;">Part I — Belgrade</div>
-      <p style="margin: 0; font-size: 0.9rem; color: var(--ink-mid); line-height: 1.6;">A 5-day internal offsite built around focused work sessions and local Belgrade experiences.</p>
+      <p style="margin: 0; font-size: 0.9rem; color: var(--ink-mid); line-height: 1.6;">A 5-day internal offsite built around focused work sessions and local Belgrade experiences — boat tour, Belgrade day out, and more.</p>
     </div>
-    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem;">
-      <div style="font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 0.5rem;">Part II — US Meetup</div>
-      <p style="margin: 0; font-size: 0.9rem; color: var(--ink-mid); line-height: 1.6;">A Creator & Partners Open House — an intimate industry gathering where DeoVR and ecosystem players openly discuss how to work together.</p>
+    <div style="background: var(--teal-light); border: 1px solid rgba(91,141,217,0.2); border-radius: 12px; padding: 1.25rem 1.5rem;">
+      <div style="font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); font-weight: 600; margin-bottom: 0.5rem;">Part II — US Meetup</div>
+      <p style="margin: 0; font-size: 0.9rem; color: var(--ink-mid); line-height: 1.6;">A Creator & Partners Open House — an intimate industry gathering where DeoVR and ecosystem players openly discuss how to work together and share their updates.</p>
     </div>
   </div>
 
   <!-- PART I DIVIDER -->
-  <div class="part-divider">
+  <div class="part-divider" style="page-break-before: always;">
     <div class="part-divider-inner">
       <div class="part-divider-left">
         <div class="part-divider-part">Part I</div>
@@ -644,7 +652,7 @@
       <div class="q-card">
         <div class="q-cat">2. People & dynamics</div>
         <ul>
-          <li>Who is attending?</li>
+          <li>Which team is attending?</li>
           <li>Full focus or partial (some daily work still running)?</li>
           <li>How often does the team meet in person?</li>
           <li>Dynamics or tensions to keep in mind?</li>
@@ -655,7 +663,7 @@
         <ul>
           <li>Fixed budget range?</li>
           <li>Previous events — what worked / didn't?</li>
-          <li>Who owns agenda content?</li>
+          <li>Who owns work sessions agenda co-creation?</li>
           <li>Who has final sign-off?</li>
         </ul>
       </div>
@@ -667,7 +675,7 @@
   <div class="section" id="agenda">
     <div class="section-label">Part I · Section 02</div>
     <h2>Agenda — 5 days</h2>
-    <p class="section-sub">Day 1 arrival · Day 2 product & work · Day 3 immersive · Day 4 local experience · Day 5 close</p>
+    <p class="section-sub">Day 1 arrival & welcome dinner · Day 2 product & work sessions · Day 3 team workshop & activities · Day 4 Belgrade day out · Day 5 wrap up & departures</p>
 
     <h3>Space setup</h3>
     <div class="nego-list" style="margin-bottom: 2rem;">
@@ -702,13 +710,12 @@
 
     <div class="agenda-day">
       <div class="agenda-day-header">
-        <div class="agenda-day-title">Day 3 — Immersive</div>
-        <div class="agenda-day-theme">Work + wow moment</div>
+        <div class="agenda-day-title">Day 3 — Workshop & Activities</div>
+        <div class="agenda-day-theme">Team building + fun in the evening</div>
       </div>
       <div class="agenda-slot"><div class="agenda-time">Morning</div><div class="agenda-item">Breakout tracks <span class="slot-type tag-work">work</span><small>Implementation-focused</small></div></div>
       <div class="agenda-slot"><div class="agenda-time">Afternoon</div><div class="agenda-item">DeoVR immersive workshop <span class="slot-type tag-social">social</span><small>Two teams: one plays VR content creators, one plays the DeoVR platform team evaluating submissions. Both work through the actual product — seeing how it operates from both sides.</small></div></div>
-      <div class="agenda-slot"><div class="agenda-time">Evening</div><div class="agenda-item">Synchronised group VR experience <span class="slot-type tag-vr">VR</span> · Dinner <span class="slot-type tag-food">F&B</span><small>Full group in one shared environment simultaneously — 5 min, then back in the room together</small></div></div>
-      <div class="agenda-slot"><div class="agenda-time">Late evening</div><div class="agenda-item">Darts or billiards <span class="slot-type tag-social">social</span><small>Optional — casual wind-down after dinner</small></div></div>
+      <div class="agenda-slot"><div class="agenda-time">Evening</div><div class="agenda-item">Darts or billiards <span class="slot-type tag-social">social</span><small>Optional — casual wind-down after dinner</small></div></div>
     </div>
 
     <div class="agenda-day">
@@ -897,7 +904,7 @@
 
 
   <!-- PART II DIVIDER -->
-  <div class="part-divider">
+  <div class="part-divider" style="page-break-before: always;">
     <div class="part-divider-inner">
       <div class="part-divider-left">
         <div class="part-divider-part">Part II</div>
@@ -943,7 +950,7 @@
           <li>Fixed budget range?</li>
           <li>Which channels should we use to reach our target audience?</li>
           <li>Press or influencers?</li>
-          <li>Content captured after the event?</li>
+          <li>Which content do we want to distribute after the event?</li>
         </ul>
       </div>
     </div>
@@ -962,9 +969,9 @@
       <div class="nego-item"><div class="nego-label">Opening & announcements<br><small style="font-weight:400; color: var(--ink-light);">15–20 min</small></div><div class="nego-val">Short welcome from DeoVR — product updates, news, or announcements. Partners can also share brief updates relevant to the audience.</div></div>
       <div class="nego-item"><div class="nego-label">Three Open Corners<br><small style="font-weight:400; color: var(--ink-light);">60 min</small></div><div class="nego-val">
         Space splits into three simultaneous zones — guests move freely:<br><br>
-        <strong>Corner 1 — DeoVR Platform</strong> — publishing, monetisation, analytics, promo. Real interface, real examples.<br>
+        <strong>Corner 1 — DeoVR Platform</strong> — publishing, monetisation, analytics, promo.<br>
         <strong>Corner 2 — Production & Hardware</strong> — studios and hardware partners on setups, challenges, test options.<br>
-        <strong>Corner 3 — Brands & Deals</strong> — brands and DeoVR on what formats they need and how creators can get involved.
+        <strong>Corner 3 — Brands & Deals</strong> — brands on what formats they need and how creators can get involved.
       </div></div>
       <div class="nego-item"><div class="nego-label">Open bar & networking<br><small style="font-weight:400; color: var(--ink-light);">Until close</small></div><div class="nego-val">Closing remarks. Followed by open networking with food and bar.</div></div>
     </div>
@@ -980,7 +987,7 @@
       <span style="background: var(--accent-light); color: var(--accent); font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">T−6w</span> Partners confirmed &nbsp;·&nbsp;
       <span style="background: var(--accent-light); color: var(--accent); font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">T−5w</span> Media & influencers &nbsp;·&nbsp;
       <span style="background: var(--accent-light); color: var(--accent); font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">T−4w</span> Announce via social + partner channels &nbsp;·&nbsp;
-      <span style="background: var(--accent-light); color: var(--accent); font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">T−3w</span> Direct invites via Luma
+      <span style="background: var(--accent-light); color: var(--accent); font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">T−3w</span> Direct invites via Luma or LinkedIn (LN Helper)
     </p>
 
 
@@ -1033,9 +1040,9 @@
 
 
   <!-- SECTION 9: MY OVERALL APPROACH -->
-  <div class="section" id="wow">
+  <div class="section" id="wow" style="page-break-before: always;">
     <div class="section-label">To wrap up</div>
-    <h2>My overall approach</h2>
+    <h2 style="font-size: 2.8rem; margin-bottom: 1.25rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline-block;">My overall approach</h2>
 
     <div class="wow-box">
       <div class="timeline" style="margin: 0;">
@@ -1049,7 +1056,7 @@
         </div>
         <div class="tl-row" style="border: none;">
           <div class="tl-when" style="color: rgba(255,255,255,0.5);">DeoVR-only moment</div>
-          <div class="tl-what" style="color: rgba(255,255,255,0.8);">Anchor both events around a distinctive DeoVR-only shared VR experience that makes people talk about it the next day.</div>
+          <div class="tl-what" style="color: rgba(255,255,255,0.8);">Anchor both events around a distinctive experience that makes people talk about it.</div>
         </div>
       </div>
     </div>
